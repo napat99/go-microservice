@@ -1,28 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
+	"microservices_demo/handlers"
 	"net/http"
+	"os"
 )
 
 func main() {
-	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
-		log.Println("Hello World")
-		d, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(rw, "oops!", http.StatusBadRequest)
-			return
-		}
+	// create a logger to pass into our handler
+	l := log.New(os.Stdout, "product-api", log.LstdFlags)
+	// a handler is a function that would trigger when a path is called
+	hh := handlers.NewHello(l)
 
-		fmt.Fprintf(rw, "hello %s\n", d)
-	})
+	// we have to create a 'mux', basically a router for handers
+	sm := http.NewServeMux()
+	sm.Handle("/", hh)
 
-	http.HandleFunc("/goodbye", func(http.ResponseWriter, *http.Request) {
-		log.Println("Goodbye World")
-	})
-
-	http.ListenAndServe(":9090", nil)
+	// specify a port for server and attach mux to it, nil means just use default mux
+	http.ListenAndServe(":9090", sm)
 
 }
