@@ -22,8 +22,10 @@ func NewHello(l *log.Logger) *Hello {
 	return &Hello{l}
 }
 
+// Reads the body of the request and reply with hello ...
 func (h *Hello) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	// use the l object as defined by the constructor above
+	// this will print on the server (logging)
 	h.l.Println("Hello World")
 
 	d, err := ioutil.ReadAll(r.Body)
@@ -32,5 +34,6 @@ func (h *Hello) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// this will print on the client
 	fmt.Fprintf(rw, "hello %s\n", d)
 }
