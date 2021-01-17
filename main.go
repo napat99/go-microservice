@@ -12,17 +12,20 @@ import (
 
 func main() {
 	// create a logger to pass into our handler
-	l := log.New(os.Stdout, "product-api", log.LstdFlags)
+	l := log.New(os.Stdout, "product-api ", log.LstdFlags)
 	// a handler is a function that would trigger when a path is called
-	hh := handlers.NewHello(l)
-	gh := handlers.NewGoodbye(l)
+	// hh := handlers.NewHello(l)
+	// gh := handlers.NewGoodbye(l)
+	ph := handlers.NewProducts(l)
 
 	// we have to create a 'mux', basically a router for handers
 	sm := http.NewServeMux()
-	// generic path -> use hello handler
-	sm.Handle("/", hh)
-	// specific path -> use specific handler
-	sm.Handle("/goodbye", gh)
+	// // generic path -> use hello handler
+	// sm.Handle("/", hh)
+	// // specific path -> use specific handler
+	// sm.Handle("/goodbye", gh)
+
+	sm.Handle("/", ph)
 
 	// manually create a server to handle things like timeouts
 	s := &http.Server{
